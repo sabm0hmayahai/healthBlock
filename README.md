@@ -1,6 +1,11 @@
 # A blockchain based medical record management system
 
-Run 
+Navigate inside *healthBlock* and **run**
 ```
 npm install
 ```
+
+Dependencies:
+- Truffle
+- Ganache
+- MetaMask
