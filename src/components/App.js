@@ -246,7 +246,7 @@ class App extends Component {
         <Navbar bg="dark" variant="dark">
           <Navbar.Brand href="/">Health-Block</Navbar.Brand>
           <Nav className="mr-auto">
-            <Nav.Link href="/">Blockchain powered health traking</Nav.Link>
+            <Nav.Link href="/">Blockchain powered health tracking</Nav.Link>
           </Nav>
           <Nav className="mr-sm-2 account-name">
             Current account : {this.state.account}
