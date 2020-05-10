@@ -16,8 +16,6 @@
  * send() -> spill it onto the blockchain
  */
 
-// TODO: create SHOW HEALTH NOTE
-
 import React, { Component } from "react";
 import "./App.css";
 import HealthCare from "../abis/HealthCare.json";
@@ -115,7 +113,7 @@ class App extends Component {
     this.state.healthCare.methods
       .doctorCount()
       .call()
-      .then(function (res) {
+      .then(function(res) {
         toast.success("Number of verified doctor(s): " + res);
       });
   };
@@ -124,7 +122,7 @@ class App extends Component {
     this.state.healthCare.methods
       .patientCount()
       .call()
-      .then(function (res) {
+      .then(function(res) {
         toast.success("Number of verified patient(s): " + res);
       });
   };
@@ -133,7 +131,7 @@ class App extends Component {
     this.state.healthCare.methods
       .HealthNoteCount()
       .call()
-      .then(function (res) {
+      .then(function(res) {
         toast.success("Number of Health Notes given out: " + res);
       });
   };
@@ -212,7 +210,7 @@ class App extends Component {
     this.state.healthCare.methods
       .healthNotes(this.state.showhealthNoteaddr)
       .call()
-      .then(function (res) {
+      .then(function(res) {
         // console.log(res);
         toast.success("Patient: " + res["1"], {
           position: "top-right",
