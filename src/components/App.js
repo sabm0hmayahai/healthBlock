@@ -1,3 +1,29 @@
+/**
+ * all the bullshit needed to run the actual commands
+ * 
+ * app.admin() -> to get the admin address
+ * app.doctorCount() -> to get number of registered doctors
+ * app.patientCount() -> to get number of patients
+ * app.createDoctor("kalpan", {from: accounts[1]}) -> to create an unverified doctor
+ * app.verifyDoctor(accounts[1], {from: accounts[0]}) -> verify the doctor (ADMIN ONLY)
+ * app.createPatient(accounts[3], "john", {from: accounts[1]}) -> create a patient (DOCTOR ONLY)
+ * app.writeNote(accounts[3], "wrong", "something wrong", {from: accounts[1]}) -> write note (DOCTOR ONLY)
+ * app.HealthNoteCount() -> to get number of health notes
+ * app.doctors(accounts[1]) -> show doctor details
+ * app.patients(accounts[3]) -> show patient details
+ * 
+ * call() -> read from blockchain
+ * send() -> spill it onto the blockchain
+ */
+
+ // @rajesh
+ // TODO: create SHOW HEALTH NOTE
+ // move CREATE DOCTOR to doctor section
+ // DOCTOR DETAILS & PATIENT DETAILS are something anyone can check, 
+ // maybe have a public section for them?
+ // change the way we are storing health notes? maybe by patients?
+
+
 import React, { Component } from "react";
 import "./App.css";
 import HealthCare from "../abis/HealthCare.json";
@@ -96,6 +122,13 @@ class App extends Component {
     this.setState({
       createDoctorname: "",
     });
+    console.log(this.state.createDoctorname);
+    console.log(this.state.account);
+    // Does not work, idk what the error is
+    // Could be related to Gas
+    this.state.healthCare.methods.createDoctor(
+      this.state.createDoctorname
+    ).send({from: this.state.account});
   };
   //2
   verifyDoctor = (e) => {
@@ -152,7 +185,7 @@ class App extends Component {
     return (
       <React.Fragment>
         <Navbar bg="dark" variant="dark">
-          <Navbar.Brand href="/">health-Block</Navbar.Brand>
+          <Navbar.Brand href="/">Health-Block</Navbar.Brand>
           <Nav className="mr-auto">
             <Nav.Link href="/">Blockchain powered health traking</Nav.Link>
           </Nav>
@@ -165,7 +198,7 @@ class App extends Component {
         <br />
         {/* ADMIN SECTION */}
         <div className="text-center">
-          <h1>Welcome to healthBlock</h1>
+          <h1>Welcome to Health-Block</h1>
           <img src={Logo} alt="logo" />
         </div>
         <br />
