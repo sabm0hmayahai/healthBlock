@@ -1,11 +1,19 @@
 # A blockchain based medical record management system
 
-Navigate inside *healthBlock* and **run**
+Navigate inside _healthBlock_ and **run**
+
 ```
-npm install
+$ npm install
 ```
 
-Dependencies:
-- Truffle
-- Ganache
-- MetaMask
+```
+$ truffle migrate
+```
+
+Run Ganache GUI
+
+```
+$ npm start
+```
+
+Connect to metaMask RPC. Enjoy! 😄

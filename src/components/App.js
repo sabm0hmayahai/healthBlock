@@ -1,6 +1,6 @@
 /**
  * all the bullshit needed to run the actual commands
- * 
+ *
  * app.admin() -> to get the admin address
  * app.doctorCount() -> to get number of registered doctors
  * app.patientCount() -> to get number of patients
@@ -11,18 +11,12 @@
  * app.HealthNoteCount() -> to get number of health notes
  * app.doctors(accounts[1]) -> show doctor details
  * app.patients(accounts[3]) -> show patient details
- * 
+ *
  * call() -> read from blockchain
  * send() -> spill it onto the blockchain
  */
 
- // @rajesh
- // TODO: create SHOW HEALTH NOTE
- // move CREATE DOCTOR to doctor section
- // DOCTOR DETAILS & PATIENT DETAILS are something anyone can check, 
- // maybe have a public section for them?
- // change the way we are storing health notes? maybe by patients?
-
+// TODO: create SHOW HEALTH NOTE
 
 import React, { Component } from "react";
 import "./App.css";
@@ -36,7 +30,6 @@ import "react-toastify/dist/ReactToastify.css";
 
 toast.configure();
 
-
 class App extends Component {
   //do this whenever this component will mount to the react-DOM
   async componentWillMount() {
@@ -45,12 +38,10 @@ class App extends Component {
     await this.showAdmin();
   }
 
-
   async showAdmin() {
     const admin = await this.state.healthCare.methods.admin().call();
     console.log(admin);
   }
-  
 
   async loadWeb3() {
     if (window.ethereum) {
@@ -111,6 +102,8 @@ class App extends Component {
       writeNotepaddr: "",
       writeNotetitle: "",
       writeNotedesc: "",
+      //7
+      showhealthNoteaddr: "",
     };
   }
   changeHandler = (e) =>
@@ -119,21 +112,30 @@ class App extends Component {
     });
 
   dCount = () => {
-    this.state.healthCare.methods.doctorCount().call().then(function(res){
-      toast.info("Number of verified doctor(s): "+res);
-    });
+    this.state.healthCare.methods
+      .doctorCount()
+      .call()
+      .then(function (res) {
+        toast.success("Number of verified doctor(s): " + res);
+      });
   };
 
   pCount = () => {
-    this.state.healthCare.methods.patientCount().call().then(function(res){
-      toast.info("Number of verified patient(s): "+res);
-    });
+    this.state.healthCare.methods
+      .patientCount()
+      .call()
+      .then(function (res) {
+        toast.success("Number of verified patient(s): " + res);
+      });
   };
 
-  noteCount = () => {  
-    this.state.healthCare.methods.HealthNoteCount().call().then(function(res){
-      toast.info("Number of Health Notes given out: "+res);
-    });
+  noteCount = () => {
+    this.state.healthCare.methods
+      .HealthNoteCount()
+      .call()
+      .then(function (res) {
+        toast.success("Number of Health Notes given out: " + res);
+      });
   };
 
   //1
@@ -142,9 +144,9 @@ class App extends Component {
     this.setState({
       createDoctorname: "",
     });
-    this.state.healthCare.methods.createDoctor(
-      this.state.createDoctorname
-    ).send({from: this.state.account});
+    this.state.healthCare.methods
+      .createDoctor(this.state.createDoctorname)
+      .send({ from: this.state.account });
   };
   //2
   verifyDoctor = (e) => {
@@ -152,9 +154,9 @@ class App extends Component {
     this.setState({
       verifyDoctoraddr: "",
     });
-    this.state.healthCare.methods.verifyDoctor(
-      this.state.verifyDoctoraddr
-    ).send({from: this.state.account});
+    this.state.healthCare.methods
+      .verifyDoctor(this.state.verifyDoctoraddr)
+      .send({ from: this.state.account });
   };
   //3
   doctorDetails = (e) => {
@@ -162,9 +164,7 @@ class App extends Component {
     this.setState({
       doctorDetailsaddr: "",
     });
-    this.state.healthCare.methods.doctors(
-      this.state.doctorDetailsaddr
-    ).call();
+    this.state.healthCare.methods.doctors(this.state.doctorDetailsaddr).call();
   };
   //4
   patientDetails = (e) => {
@@ -172,9 +172,9 @@ class App extends Component {
     this.setState({
       patientDetailsaddr: "",
     });
-    this.state.healthCare.methods.patients(
-      this.state.patientDetailsaddr
-    ).call();
+    this.state.healthCare.methods
+      .patients(this.state.patientDetailsaddr)
+      .call();
   };
   //5
   createPatient = (e) => {
@@ -183,10 +183,9 @@ class App extends Component {
       createPatientname: "",
       createPatientaddr: "",
     });
-    this.state.healthCare.methods.createPatient(
-      this.state.createPatientaddr,
-      this.state.createPatientname
-    ).send({from: this.state.account});
+    this.state.healthCare.methods
+      .createPatient(this.state.createPatientaddr, this.state.createPatientname)
+      .send({ from: this.state.account });
   };
   //6
   writeNote = (e) => {
@@ -196,12 +195,39 @@ class App extends Component {
       writeNotetitle: "",
       writeNotedesc: "",
     });
-    this.state.healthCare.methods.writeNote(
-      this.state.writeNotepaddr,
-      this.state.writeNotetitle,
-      this.state.writeNotedesc
-    ).send({from: this.state.account});  };
-
+    this.state.healthCare.methods
+      .writeNote(
+        this.state.writeNotepaddr,
+        this.state.writeNotetitle,
+        this.state.writeNotedesc
+      )
+      .send({ from: this.state.account });
+  };
+  //7
+  showhealthNote = (e) => {
+    e.preventDefault();
+    this.setState({
+      showhealthNoteaddr: "",
+    });
+    this.state.healthCare.methods
+      .healthNotes(this.state.showhealthNoteaddr)
+      .call()
+      .then(function (res) {
+        // console.log(res);
+        toast.success("Patient: " + res["1"], {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        toast.success("Doctor: " + res["2"]);
+        toast.info("Title: " + res["3"]);
+        toast.info("Description: " + res["4"]);
+      });
+  };
   render() {
     const {
       createDoctorname,
@@ -213,6 +239,7 @@ class App extends Component {
       writeNotepaddr,
       writeNotetitle,
       writeNotedesc,
+      showhealthNoteaddr,
     } = this.state;
     return (
       <React.Fragment>
@@ -249,33 +276,6 @@ class App extends Component {
                 Health Note Count
               </Button>{" "}
             </div>
-            <br />
-            <br />
-            <br />
-            {/* 1 */}
-            <form onSubmit={this.createDoctor}>
-              <h3>CreateDoctor</h3>
-              <div class="form-group">
-                Doctor's Name:
-                <input
-                  type="text"
-                  name="createDoctorname"
-                  class="form-control"
-                  placeholder="Enter Name*"
-                  value={createDoctorname}
-                  onChange={this.changeHandler}
-                />
-              </div>
-
-              <div class="form-group">
-                <button
-                  class="btn btn-lg btn-primary btn-block text-uppercase"
-                  type="submit"
-                >
-                  Create
-                </button>
-              </div>
-            </form>
 
             <br />
             <br />
@@ -308,6 +308,7 @@ class App extends Component {
             <br />
             <br />
             {/* 3 */}
+            <h1 className="text-center">Public Section</h1>
             <form onSubmit={this.doctorDetails}>
               <h3>Doctor's Details</h3>
               <div class="form-group">
@@ -367,6 +368,35 @@ class App extends Component {
         <div>
           <h1 className="text-center">Doctor Section</h1>
           <div className="container col-5 justify-content-center">
+            <br />
+            <br />
+            {/* 1 */}
+            <form onSubmit={this.createDoctor}>
+              <h3>CreateDoctor</h3>
+              <div class="form-group">
+                Doctor's Name:
+                <input
+                  type="text"
+                  name="createDoctorname"
+                  class="form-control"
+                  placeholder="Enter Name*"
+                  value={createDoctorname}
+                  onChange={this.changeHandler}
+                />
+              </div>
+
+              <div class="form-group">
+                <button
+                  class="btn btn-lg btn-primary btn-block text-uppercase"
+                  type="submit"
+                >
+                  Create
+                </button>
+              </div>
+            </form>
+            <br />
+            <br />
+            <br />
             {/* 5  */}
             <form onSubmit={this.createPatient}>
               <h3>CreatePatient</h3>
@@ -405,6 +435,7 @@ class App extends Component {
             <br />
             <br />
             <br />
+
             {/* 6 */}
             <form onSubmit={this.writeNote}>
               <h3>WriteNote</h3>
@@ -449,6 +480,32 @@ class App extends Component {
                   type="submit"
                 >
                   Create
+                </button>
+              </div>
+            </form>
+            <br />
+            <br />
+            <br />
+            <form onSubmit={this.showhealthNote}>
+              <h3>Show Health Note Details</h3>
+              <div class="form-group">
+                Input:
+                <input
+                  type="text"
+                  name="showhealthNoteaddr"
+                  class="form-control"
+                  placeholder="Enter Your Input*"
+                  value={showhealthNoteaddr}
+                  onChange={this.changeHandler}
+                />
+              </div>
+
+              <div class="form-group">
+                <button
+                  class="btn btn-lg btn-primary btn-block text-uppercase"
+                  type="submit"
+                >
+                  Check
                 </button>
               </div>
             </form>
