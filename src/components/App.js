@@ -31,6 +31,12 @@ import Web3 from "web3";
 import { Navbar, Nav, Button } from "react-bootstrap";
 import "./App.css";
 import Logo from "../assets/images.png";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+toast.configure();
+
+
 class App extends Component {
   //do this whenever this component will mount to the react-DOM
   async componentWillMount() {
@@ -39,10 +45,12 @@ class App extends Component {
     await this.showAdmin();
   }
 
+
   async showAdmin() {
     const admin = await this.state.healthCare.methods.admin().call();
     console.log(admin);
   }
+  
 
   async loadWeb3() {
     if (window.ethereum) {
@@ -110,11 +118,23 @@ class App extends Component {
       [e.target.name]: e.target.value,
     });
 
-  dCount = () => {};
+  dCount = () => {
+    this.state.healthCare.methods.doctorCount().call().then(function(res){
+      toast.info("Number of verified doctor(s): "+res);
+    });
+  };
 
-  pCount = () => {};
+  pCount = () => {
+    this.state.healthCare.methods.patientCount().call().then(function(res){
+      toast.info("Number of verified patient(s): "+res);
+    });
+  };
 
-  noteCount = () => {};
+  noteCount = () => {  
+    this.state.healthCare.methods.HealthNoteCount().call().then(function(res){
+      toast.info("Number of Health Notes given out: "+res);
+    });
+  };
 
   //1
   createDoctor = (e) => {
@@ -122,10 +142,6 @@ class App extends Component {
     this.setState({
       createDoctorname: "",
     });
-    console.log(this.state.createDoctorname);
-    console.log(this.state.account);
-    // Does not work, idk what the error is
-    // Could be related to Gas
     this.state.healthCare.methods.createDoctor(
       this.state.createDoctorname
     ).send({from: this.state.account});
@@ -136,6 +152,9 @@ class App extends Component {
     this.setState({
       verifyDoctoraddr: "",
     });
+    this.state.healthCare.methods.verifyDoctor(
+      this.state.verifyDoctoraddr
+    ).send({from: this.state.account});
   };
   //3
   doctorDetails = (e) => {
@@ -143,6 +162,9 @@ class App extends Component {
     this.setState({
       doctorDetailsaddr: "",
     });
+    this.state.healthCare.methods.doctors(
+      this.state.doctorDetailsaddr
+    ).call();
   };
   //4
   patientDetails = (e) => {
@@ -150,6 +172,9 @@ class App extends Component {
     this.setState({
       patientDetailsaddr: "",
     });
+    this.state.healthCare.methods.patients(
+      this.state.patientDetailsaddr
+    ).call();
   };
   //5
   createPatient = (e) => {
@@ -158,6 +183,10 @@ class App extends Component {
       createPatientname: "",
       createPatientaddr: "",
     });
+    this.state.healthCare.methods.createPatient(
+      this.state.createPatientaddr,
+      this.state.createPatientname
+    ).send({from: this.state.account});
   };
   //6
   writeNote = (e) => {
@@ -167,8 +196,11 @@ class App extends Component {
       writeNotetitle: "",
       writeNotedesc: "",
     });
-    console.log(this.state);
-  };
+    this.state.healthCare.methods.writeNote(
+      this.state.writeNotepaddr,
+      this.state.writeNotetitle,
+      this.state.writeNotedesc
+    ).send({from: this.state.account});  };
 
   render() {
     const {
